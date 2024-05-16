@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @Data
 @Builder
-public class AdminTaskResponse extends TaskResponse {
+public class AdminTaskResponse {
 
     private Integer id;
 
