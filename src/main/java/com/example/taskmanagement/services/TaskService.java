@@ -1,22 +1,22 @@
 package com.example.taskmanagement.services;
 
-import com.example.taskmanagement.dtos.requests.TaskRequest;
-import com.example.taskmanagement.dtos.responses.MessageResponse;
-import com.example.taskmanagement.dtos.responses.TaskResponse;
-
-import java.util.List;
+import com.example.taskmanagement.dtos.requests.CreateTaskRequest;
+import com.example.taskmanagement.dtos.requests.UpdateTaskRequest;
+import com.example.taskmanagement.dtos.responses.*;
 
 public interface TaskService {
 
-    TaskResponse createTask(TaskRequest taskRequest);
+    TaskResponse createTask(CreateTaskRequest taskRequest);
 
-    TaskResponse updateTask(Integer id, TaskRequest taskRequest);
+    TaskResponse updateTask(Integer id, UpdateTaskRequest taskRequest);
 
     TaskResponse getTask(Integer id);
 
-    List<TaskResponse> getAllTasks();
+    AdminTaskResponse getTaskAdmin(Integer id);
 
-    List<TaskResponse> getUserTasks();
+    AdminTasksResponse getAllTasks(long offset, int limit);
+
+    TasksResponse getUserTasks(long offset, int limit);
 
     MessageResponse deleteTask(Integer id);
 

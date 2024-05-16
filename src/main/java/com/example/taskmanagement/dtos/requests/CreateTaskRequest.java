@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.Instant;
 
 @Data
-public class TaskRequest {
+public class CreateTaskRequest {
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters long")

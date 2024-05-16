@@ -10,7 +10,7 @@ import java.time.Instant;
 @Builder
 public class UserResponse {
 
-    private Integer id;
+    private String id;
 
     private String name;
 
