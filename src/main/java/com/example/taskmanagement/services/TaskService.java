@@ -10,12 +10,14 @@ public interface TaskService {
 
     TaskResponse createTask(TaskRequest taskRequest);
 
-    TaskResponse updateTask(TaskRequest taskRequest);
+    TaskResponse updateTask(Integer id, TaskRequest taskRequest);
+
+    TaskResponse getTask(Integer id);
 
     List<TaskResponse> getAllTasks();
 
     List<TaskResponse> getUserTasks();
 
-    MessageResponse deleteTask();
+    MessageResponse deleteTask(Integer id);
 
 }
