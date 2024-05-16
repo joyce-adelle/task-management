@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
-    Optional<Task> findByIdAndCreatedBy(Integer id, String userId);
+    Optional<Task> findByIdAndCreatedById(Integer id, String userId);
 
-    void deleteByIdAndCreatedBy(Integer id, String userId);
+    void deleteByIdAndCreatedById(Integer id, String userId);
 
-    Page<Task> findAllByCreatedBy(String userId, Pageable page);
+    Page<Task> findAllByCreatedById(String userId, Pageable page);
 
 }

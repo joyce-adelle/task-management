@@ -34,4 +34,9 @@ public class ApplicationConfig {
         return authConfig.getAuthenticationManager();
     }
 
+    @Bean
+    AuditAware auditorProvider() {
+        return new AuditAware();
+    }
+
 }
