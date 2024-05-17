@@ -3,15 +3,14 @@ package com.example.taskmanagement.entities;
 import com.example.taskmanagement.utils.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.*;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.Instant;
 import java.util.Set;
@@ -53,11 +52,23 @@ public class User {
     private Instant updatedAt;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
+    @Enumerated
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy="createdBy")
+    @OneToMany(mappedBy = "createdBy")
     private Set<Task> tasks;
 
+    @Override
+    public String toString() {
+        return "User{" +
+               "id='" + id + '\'' +
+               ", email='" + email + '\'' +
+               ", name='" + name + '\'' +
+               ", createdAt=" + createdAt +
+               ", updatedAt=" + updatedAt +
+               ", role=" + role +
+               '}';
+    }
 }

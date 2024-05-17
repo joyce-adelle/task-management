@@ -6,14 +6,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.Instant;
 
 @Setter
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "task")
@@ -34,7 +38,9 @@ public class Task {
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
+    @Enumerated
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private Status status;
 
     @Column(name = "started_at")
