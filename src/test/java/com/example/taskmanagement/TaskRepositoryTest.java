@@ -165,7 +165,7 @@ public class TaskRepositoryTest {
 
         Page<Task> otherTasks = taskRepository.findAllByCreatedById(otherUser.getId(), new OffsetBasedPageRequest(0, 3));
         List<Task> tasks = taskRepository.findAll();
-        
+
         assertThat(tasks.size()).isEqualTo(1);
         assertThat(tasks).isEqualTo(otherTasks.getContent());
         assertThat(tasks).extracting(Task::getId).containsOnly(otherTask.getId());
