@@ -29,7 +29,7 @@ public class UserRepositoryTest {
     @Transactional
     public void givenUserCreated_whenFindByEmail_thenSuccess() {
         User newUser = User.builder()
-                .email("testuser@mail.com")
+                .email("testuser1@mail.com")
                 .name("Test User")
                 .password("password")
                 .createdAt(Instant.now())
@@ -38,7 +38,7 @@ public class UserRepositoryTest {
 
         entityManager.persist(newUser);
 
-        Optional<User> user = userRepository.findByEmailIgnoreCase("testuser@mail.com");
+        Optional<User> user = userRepository.findByEmailIgnoreCase("testuser1@mail.com");
         assertThat(user).isNotEmpty();
         assertThat(user).contains(newUser);
         assertThat(user.get().getRole()).isEqualTo(Role.USER);
@@ -49,7 +49,7 @@ public class UserRepositoryTest {
     @Transactional
     public void givenUserNotCreated_whenFindByEmail_thenFailure() {
 
-        Optional<User> user = userRepository.findByEmailIgnoreCase("testuser@mail.com");
+        Optional<User> user = userRepository.findByEmailIgnoreCase("testuser1@mail.com");
         assertThat(user).isEmpty();
 
     }
@@ -58,7 +58,7 @@ public class UserRepositoryTest {
     @Transactional
     public void givenUserCreated_whenExitsByEmail_thenSuccess() {
         User newUser = User.builder()
-                .email("testuser@mail.com")
+                .email("testuser1@mail.com")
                 .name("Test User")
                 .password("password")
                 .createdAt(Instant.now())
@@ -67,7 +67,7 @@ public class UserRepositoryTest {
 
         entityManager.persist(newUser);
 
-        boolean exists = userRepository.existsByEmailIgnoreCase("testuser@mail.com");
+        boolean exists = userRepository.existsByEmailIgnoreCase("testuser1@mail.com");
         assertTrue(exists);
 
     }
@@ -76,10 +76,9 @@ public class UserRepositoryTest {
     @Transactional
     public void givenUserNotCreated_whenExitsByEmail_thenFailure() {
 
-        boolean exists = userRepository.existsByEmailIgnoreCase("testuser@mail.com");
+        boolean exists = userRepository.existsByEmailIgnoreCase("testuser1@mail.com");
         assertFalse(exists);
 
     }
-
 
 }

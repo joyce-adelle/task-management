@@ -4,17 +4,12 @@ import com.example.taskmanagement.config.JwtService;
 import com.example.taskmanagement.dtos.requests.LoginRequest;
 import com.example.taskmanagement.dtos.requests.SignUpRequest;
 import com.example.taskmanagement.dtos.responses.LoginResponse;
-import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.exception.AppException;
-import com.example.taskmanagement.repositories.UserRepository;
 import com.example.taskmanagement.services.AuthService;
 import com.example.taskmanagement.utils.Errors;
-import com.example.taskmanagement.utils.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.Instant;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -28,22 +23,8 @@ public class AuthServiceTest {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Test
     public void userNotCreated_whenEmailExits_thenSuccess() {
-
-        User newUser = User.builder()
-                .email("testuser@mail.com")
-                .name("Test User")
-                .password("password")
-                .createdAt(Instant.now())
-                .updatedAt(null)
-                .role(Role.USER)
-                .build();
-
-        userRepository.save(newUser);
 
         SignUpRequest request = new SignUpRequest();
         request.setEmail("testuser@mail.com");

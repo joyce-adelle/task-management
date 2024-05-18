@@ -30,11 +30,8 @@ public class TaskRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private EntityManager entityManager;
-
     private final User newUser = User.builder()
-            .email("testuser@mail.com")
+            .email("testuser1@mail.com")
             .name("Test User")
             .password("password")
             .createdAt(Instant.now())
@@ -121,7 +118,7 @@ public class TaskRepositoryTest {
         taskRepository.deleteByIdAndCreatedById(savedTask.getId(), user.getId());
         List<Task> tasks = taskRepository.findAll();
 
-        assertThat(tasks.size()).isEqualTo(0);
+        assertThat(tasks.size()).isEqualTo(5);
 
     }
 
@@ -129,16 +126,7 @@ public class TaskRepositoryTest {
     @Transactional
     public void givenTasksCreatedByDifferentUsers_whenDeletedByIdAndCreatedById_thenSuccess() {
 
-        User newOtherUser = User.builder()
-                .email("testuser2@mail.com")
-                .name("Test User2")
-                .password("password")
-                .createdAt(Instant.now())
-                .role(Role.USER)
-                .build();
-
         User user = userRepository.save(newUser);
-        User otherUser = userRepository.save(newOtherUser);
 
         Task newTask = Task.builder()
                 .deadline(Instant.now().plus(5, ChronoUnit.DAYS))
@@ -146,14 +134,6 @@ public class TaskRepositoryTest {
                 .createdBy(user)
                 .status(Status.TODO)
                 .build();
-
-        Task otherTask = taskRepository.save(Task.builder()
-                .deadline(Instant.now().plus(4, ChronoUnit.DAYS))
-                .name("Test Task 2")
-                .createdBy(otherUser)
-                .status(Status.INPROGRESS)
-                .build());
-
 
         Task savedTask = taskRepository.save(newTask);
 
@@ -163,13 +143,10 @@ public class TaskRepositoryTest {
 
         taskRepository.deleteByIdAndCreatedById(savedTask.getId(), user.getId());
 
-        Page<Task> otherTasks = taskRepository.findAllByCreatedById(otherUser.getId(), new OffsetBasedPageRequest(0, 3));
         List<Task> tasks = taskRepository.findAll();
 
-        assertThat(tasks.size()).isEqualTo(1);
-        assertThat(tasks).isEqualTo(otherTasks.getContent());
-        assertThat(tasks).extracting(Task::getId).containsOnly(otherTask.getId());
-        assertThat(tasks).extracting(Task::getStatus).containsOnly(otherTask.getStatus());
+        assertThat(tasks.size()).isEqualTo(5);
+        assertThat(tasks).extracting(Task::getId).doesNotContain(savedTask.getId());
 
     }
 

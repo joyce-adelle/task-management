@@ -24,6 +24,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/api/admin")
 public class AdminControllerImplementation implements AdminController {
 
@@ -32,7 +33,6 @@ public class AdminControllerImplementation implements AdminController {
     private final TaskService taskService;
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users/change-role")
     public ResponseEntity<ApiResponse<UserResponse>> changeUserRole(@RequestBody @Valid UpdateUserRoleRequest request,
                                                                     HttpServletRequest httpServletRequest) {
@@ -48,7 +48,6 @@ public class AdminControllerImplementation implements AdminController {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<ApiListResponse<List<UserResponse>>> getAllUsers(@RequestParam(defaultValue = "0") @Min(0) long offset, @RequestParam(defaultValue = "10") @Min(1) int limit,
                                                                            HttpServletRequest httpServletRequest) {
@@ -66,8 +65,7 @@ public class AdminControllerImplementation implements AdminController {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/tasks")
+    @GetMapping("/tasks/{id}")
     public ResponseEntity<ApiResponse<AdminTaskResponse>> getTask(@PathVariable("id") @Min(1) @NotNull(message = "Task id is required") Integer id, HttpServletRequest httpServletRequest) {
 
         return ResponseEntity.ok(ApiResponse.<AdminTaskResponse>builder()
@@ -81,8 +79,7 @@ public class AdminControllerImplementation implements AdminController {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/tasks")
     public ResponseEntity<ApiListResponse<List<AdminTaskResponse>>> getAllTasks(@RequestParam(defaultValue = "0") @Min(0) long offset, @RequestParam(defaultValue = "10") @Min(1) int limit,
                                                                                 HttpServletRequest httpServletRequest) {
 
