@@ -1,5 +1,7 @@
 package com.example.taskmanagement.config;
 
+import com.example.taskmanagement.config.jwt.AuditAware;
+import com.example.taskmanagement.config.jwt.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

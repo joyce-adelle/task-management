@@ -1,4 +1,4 @@
-package com.example.taskmanagement.config;
+package com.example.taskmanagement.config.jwt;
 
 import com.example.taskmanagement.exception.AppException;
 import io.jsonwebtoken.*;

@@ -1,5 +1,6 @@
-package com.example.taskmanagement.config;
+package com.example.taskmanagement.config.jwt;
 
+import com.example.taskmanagement.config.jwt.PrincipalUser;
 import com.example.taskmanagement.entities.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.lang.NonNull;

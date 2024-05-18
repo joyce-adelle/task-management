@@ -1,6 +1,6 @@
 package com.example.taskmanagement;
 
-import com.example.taskmanagement.config.JwtService;
+import com.example.taskmanagement.config.jwt.JwtService;
 import com.example.taskmanagement.dtos.requests.LoginRequest;
 import com.example.taskmanagement.dtos.requests.SignUpRequest;
 import com.example.taskmanagement.dtos.responses.LoginResponse;

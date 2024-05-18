@@ -1,4 +1,4 @@
-package com.example.taskmanagement.config;
+package com.example.taskmanagement.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

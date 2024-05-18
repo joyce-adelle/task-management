@@ -1,6 +1,6 @@
 package com.example.taskmanagement.services.implementations;
 
-import com.example.taskmanagement.config.AuditAware;
+import com.example.taskmanagement.config.jwt.AuditAware;
 import com.example.taskmanagement.dtos.requests.CreateTaskRequest;
 import com.example.taskmanagement.dtos.requests.UpdateTaskRequest;
 import com.example.taskmanagement.dtos.responses.*;
