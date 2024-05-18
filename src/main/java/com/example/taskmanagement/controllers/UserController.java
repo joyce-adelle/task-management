@@ -5,64 +5,27 @@ import com.example.taskmanagement.dtos.requests.UpdateUserRequest;
 import com.example.taskmanagement.dtos.responses.ApiResponse;
 import com.example.taskmanagement.dtos.responses.MessageResponse;
 import com.example.taskmanagement.dtos.responses.UserResponse;
-import com.example.taskmanagement.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.Instant;
+@Tag(name = "User", description = "User Endpoints")
+@SecurityRequirement(name = "Bearer Authentication")
+public interface UserController {
 
-@Validated
-@CrossOrigin
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/users")
-public class UserController {
+    @Operation(summary = "Update User Details", description = "Update user details (only name can be updated)")
+    ResponseEntity<ApiResponse<UserResponse>> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest,
+                                                         HttpServletRequest httpServletRequest);
 
-    private final UserService userService;
+    @Operation(summary = "Get User", description = "Get the current logged in user")
+    ResponseEntity<ApiResponse<UserResponse>> getUser(HttpServletRequest httpServletRequest);
 
-    @PatchMapping
-    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest,
-                                                                HttpServletRequest httpServletRequest) {
+    @Operation(summary = "Update User Password", description = "Update user password for accessing the application")
+    ResponseEntity<ApiResponse<MessageResponse>> updatePassword(@RequestBody @Valid UpdatePasswordRequest request,
+                                                                HttpServletRequest httpServletRequest);
 
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.updateUser(updateUserRequest))
-                .timeStamp(Instant.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build());
-
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<UserResponse>> getUser(HttpServletRequest httpServletRequest) {
-
-        return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.getUser())
-                .timeStamp(Instant.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build());
-
-    }
-
-    @PostMapping("/update-password")
-    public ResponseEntity<ApiResponse<MessageResponse>> updatePassword(@RequestBody @Valid UpdatePasswordRequest request,
-                                                                       HttpServletRequest httpServletRequest) {
-
-        return ResponseEntity.ok(ApiResponse.<MessageResponse>builder()
-                .status(HttpStatus.OK.value())
-                .data(userService.updatePassword(request))
-                .timeStamp(Instant.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .build());
-
-    }
 }

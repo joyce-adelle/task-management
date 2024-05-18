@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,9 +23,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -52,18 +51,20 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(MethodArgumentNotValidException ex,
-                                                                                      HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ApiResponse<MessageResponse>> handleValidationException(MethodArgumentNotValidException ex,
+                                                                                  HttpServletRequest httpServletRequest) {
 
         BindingResult bindingResult = ex.getBindingResult();
-        Map<String, String> errorMessages = new HashMap<>();
+        List<String> errorMessages = new ArrayList<>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+            errorMessages.add(fieldError.getDefaultMessage());
         }
 
-        ApiResponse<Map<String, String>> errorResponse = ApiResponse.<Map<String, String>>builder()
+        ApiResponse<MessageResponse> errorResponse = ApiResponse.<MessageResponse>builder()
                 .isSuccessful(false)
-                .data(errorMessages)
+                .data(MessageResponse.builder()
+                        .message(StringUtils.collectionToCommaDelimitedString(errorMessages))
+                        .build())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .path(httpServletRequest.getRequestURI())
                 .timeStamp(Instant.now())
@@ -76,17 +77,19 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleConstraintValidationException(ConstraintViolationException ex,
-                                                                                                HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ApiResponse<MessageResponse>> handleConstraintValidationException(ConstraintViolationException ex,
+                                                                                            HttpServletRequest httpServletRequest) {
 
-        Map<String, String> errorMessages = new HashMap<>();
+        List<String> errorMessages = new ArrayList<>();
         for (ConstraintViolation<?> fieldError : ex.getConstraintViolations()) {
-            errorMessages.put(fieldError.getPropertyPath().toString(), fieldError.getMessage());
+            errorMessages.add(fieldError.getMessage());
         }
 
-        ApiResponse<Map<String, String>> errorResponse = ApiResponse.<Map<String, String>>builder()
+        ApiResponse<MessageResponse> errorResponse = ApiResponse.<MessageResponse>builder()
                 .isSuccessful(false)
-                .data(errorMessages)
+                .data(MessageResponse.builder()
+                        .message(StringUtils.collectionToCommaDelimitedString(errorMessages))
+                        .build())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .path(httpServletRequest.getRequestURI())
                 .timeStamp(Instant.now())
