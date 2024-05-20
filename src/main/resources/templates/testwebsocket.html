@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebSocket Example with JWT</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+      integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <h1>Task Management Updates Via WebSocket Connection</h1>
+    <div id="messages"></div>
+    <script type="text/javascript">
+      <!--    Add valid token from login -->
+      var jwtToken =
+        "eyJhbGciOiJIUzM4NCJ9.eyJhdXRob3JpdGllcyI6IkFETUlOIiwic3ViIjoiYWRtaW51c2VyQG1haWwuY29tIiwiaWF0IjoxNzE2MTc4OTM2LCJleHAiOjE3MTYyNjUzMzZ9.-jbPwxZygt3WHBCbD87LlOxQ5dKqVPgdyji6ahTjus0OyRxoJy0umo1NF5LD4DhF";
+
+      var socket = new SockJS("/ws");
+      var stompClient = Stomp.over(socket);
+
+      var headers = {
+        Authorization: "Bearer " + jwtToken,
+      };
+
+      stompClient.connect(headers, function (frame) {
+        console.log("Connected: " + frame);
+        stompClient.subscribe("/topic/task.updates", function (message) {
+          showUpdate(message.body);
+        });
+      });
+
+      function showUpdate(message) {
+        var messages = document.getElementById("messages");
+        var messageElement = document.createElement("div");
+        messageElement.appendChild(document.createTextNode(message));
+        messages.appendChild(messageElement);
+      }
+    </script>
+  </body>
+</html>

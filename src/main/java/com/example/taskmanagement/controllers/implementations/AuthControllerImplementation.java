@@ -6,7 +6,6 @@ import com.example.taskmanagement.dtos.requests.SignUpRequest;
 import com.example.taskmanagement.dtos.responses.ApiResponse;
 import com.example.taskmanagement.dtos.responses.LoginResponse;
 import com.example.taskmanagement.services.AuthService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

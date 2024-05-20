@@ -8,14 +8,18 @@ import com.example.taskmanagement.entities.Task;
 import com.example.taskmanagement.entities.User;
 import com.example.taskmanagement.exception.AppException;
 import com.example.taskmanagement.repositories.TaskRepository;
+import com.example.taskmanagement.services.BroadcastService;
 import com.example.taskmanagement.services.TaskService;
 import com.example.taskmanagement.utils.*;
+import com.example.taskmanagement.websocket.EventType;
+import com.example.taskmanagement.websocket.WebSocketResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ public class TaskServiceImplementation implements TaskService {
 
     private final TaskRepository taskRepository;
     private final AuditAware auditAware;
+    private final BroadcastService broadcastService;
 
 
     @Override
@@ -45,7 +50,7 @@ public class TaskServiceImplementation implements TaskService {
             task.setDescription(taskRequest.getDescription());
 
         if (!UtilClass.isNull(taskRequest.getStatus()))
-            task.setStatus(Status.valueOf(taskRequest.getStatus()));
+            task.setStatus(Status.valueOf(taskRequest.getStatus().toUpperCase()));
         else
             task.setStatus(Status.TODO);
 
@@ -54,7 +59,7 @@ public class TaskServiceImplementation implements TaskService {
 
         Task savedTask = taskRepository.save(task);
 
-        return TaskResponse.builder()
+        TaskResponse taskRes = TaskResponse.builder()
                 .id(savedTask.getId())
                 .name(savedTask.getName())
                 .createdAt(savedTask.getCreatedAt())
@@ -64,6 +69,9 @@ public class TaskServiceImplementation implements TaskService {
                 .status(savedTask.getStatus())
                 .updatedAt(savedTask.getUpdatedAt())
                 .build();
+
+        broadcastService.broadcastTask(taskRes, EventType.TASK_CREATED);
+        return taskRes;
 
     }
 
@@ -86,7 +94,7 @@ public class TaskServiceImplementation implements TaskService {
             task.setDescription(taskRequest.getDescription());
 
         if (!UtilClass.isNull(taskRequest.getStatus()))
-            task.setStatus(Status.valueOf(taskRequest.getStatus()));
+            task.setStatus(Status.valueOf(taskRequest.getStatus().toUpperCase()));
 
         if (!UtilClass.isNull(taskRequest.getStartedAt()))
             task.setStartedAt(taskRequest.getStartedAt());
@@ -227,6 +235,7 @@ public class TaskServiceImplementation implements TaskService {
     }
 
     @Override
+    @Transactional
     public MessageResponse deleteTask(Integer id) {
 
         User currentUser = auditAware.getCurrentAuditor()

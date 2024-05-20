@@ -31,6 +31,8 @@ public class WebSecurityConfiguration {
                                         "/v3/api-docs/**",
                                         "/webjars/**",
                                         "/api/auth/**",
+                                        "/",
+                                        "/ws/**",
                                         "/error").permitAll()// No authentication
                         .requestMatchers("/api/admin/**")
                         .hasAnyAuthority("ADMIN")
